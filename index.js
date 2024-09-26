@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const bcrypt = require("bcryptjs");
 const connectDb = require("./db");
+const cors = require("cors");
 const User = require("./userModel");
 
 dotenv.config();
@@ -11,6 +12,7 @@ const PORT = process.env.PORT || 5000;
 
 //allows inflow of json data
 app.use(express.json());
+app.use(cors());
 
 //health check
 app.get("/", (req, res, next) => {
@@ -41,6 +43,7 @@ app.post("/auth/register", async (req, res, next) => {
 
 app.post("/auth/login", async (req, res, next) => {
   //functionality for user sign in
+  console.log("we hit this controller");
   try {
     //check user availability and compare password
     const existingUser = await User.findOne({ email: req.body.email });
@@ -48,7 +51,7 @@ app.post("/auth/login", async (req, res, next) => {
       req.body.password,
       existingUser.password
     );
-    if (existingUser || !isPasswordMatch) {
+    if (!existingUser || !isPasswordMatch) {
       return next();
     }
     res.status(200).json({
