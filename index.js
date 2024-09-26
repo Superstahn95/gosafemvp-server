@@ -30,7 +30,7 @@ app.post("/auth/register", async (req, res, next) => {
       name: req.body.name,
       password,
     });
-    res.status(200).json({
+    res.status(201).json({
       name: user.name,
       email: user.email,
     });
